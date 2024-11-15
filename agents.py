@@ -1,17 +1,23 @@
 import random
 
 class Prey:
-    def __init__(self, x, y, space, reproduce_prob, reproduce_age=5):
+    def __init__(self, x, y, space, max_age, breed_prob, breed_age):
+        # general attributes
         self.x = x
         self.y = y
         self.space = space
-        self.age = 0
-        self.reproduce_prob = reproduce_prob
-        self.reproduce_age = reproduce_age
+        self.max_age = max_age
+        self.breed_prob = breed_prob
+        self.breed_age = breed_age
+
+        # initial status
         self.is_alive = True
+        self.age = 0
     
     def age_up(self):
         self.age += 1
+        if self.age >= self.max_age:
+            self.is_alive = False
 
     def check_neighbors(self):
         # Check if which neighboring cells are empty and return them in a list
@@ -34,28 +40,33 @@ class Prey:
         if neighbors:
             self.x, self.y = random.choice(neighbors)
     
-    def reproduce(self):
-        if self.age >= self.reproduce_age:
-            if random.random() < self.reproduce_prob:
+    def breed(self):
+        if self.age >= self.breed_age:
+            if random.random() < self.breed_prob:
                 neighbors = self.check_neighbors()
                 if neighbors:
                     x_free, y_free = random.choice(neighbors)
-                    self.space[x_free][y_free] = Prey(x_free, y_free, self.space, self.reproduce_prob, self.reproduce_age)
+                    self.space[x_free][y_free] = Prey(x_free, y_free, self.space, self.max_age, self.breed_prob, self.breed_age)
     
 class Predator:
-    def __init__(self, x, y, space, max_starve_time, hunt_prob, hunting_range, max_age, reproduce_prob, reproduce_age=5):
+    def __init__(self, x, y, space, max_age, breed_prob, breed_age, max_starve_time, hunt_prob, hunting_range):
+        # general attributes
         self.x = x
         self.y = y
         self.space = space
-        self.age = 0
-        self.hunger = 0
+        self.max_age = max_age
+        self.breed_prob = breed_prob
+        self.breed_age = breed_age
+
+        # predators only attributes
         self.max_starve_time = max_starve_time
         self.hunt_prob = hunt_prob
         self.hunting_range = hunting_range
-        self.max_age = max_age
-        self.reproduce_prob = reproduce_prob
-        self.reproduce_age = reproduce_age
+
+        # initial status
+        self.hunger = 0        
         self.is_alive = True
+        self.age = 0
     
     def age_up(self):
         self.age += 1
@@ -113,13 +124,13 @@ class Predator:
             # hunger increases
             self.hunger += 1
 
-    def reproduce(self):
-        if self.age >= self.reproduce_age:
-            if random.random() < self.reproduce_prob:
+    def breed(self):
+        if self.age >= self.breed_age:
+            if random.random() < self.breed_prob:
                 # New borns do not hunt straight out of the womb so they just go to empty cells
                 empty_cells, nearby_preys = self.check_neighbors()
                 if empty_cells:
                     x_free, y_free = random.choice(empty_cells)
                     self.space[x_free][y_free] = Predator(x_free, y_free, self.space, self.max_starve_time, 
-                                                                self.hunt_prob, self.hunting_range, self.max_age,
-                                                                self.reproduce_prob, self.reproduce_age)
+                                                          self.hunt_prob, self.hunting_range, self.max_age,
+                                                          self.breed_prob, self.breed_age)

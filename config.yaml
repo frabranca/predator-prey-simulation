@@ -1,0 +1,22 @@
+simulation:
+  steps: 100
+  width: 50
+  height: 50
+
+preys:
+  count: 100
+  breed_age: 4
+  max_age: 6
+  breed_prob_mean: 0.7
+  breed_prob_std: 0.4
+
+predators:
+  count: 100
+  breed_age: 4
+  max_age: 10
+  breed_prob_mean: 0.7
+  breed_prob_std: 0.2
+  hunt_prob_mean: 0.8
+  hunt_prob_std: 0.1
+  hunting_range: 1
+  max_starve_time: 5
