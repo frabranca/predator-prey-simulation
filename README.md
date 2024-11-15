@@ -3,7 +3,7 @@ This repository contains a simulation of an _ecosystem_, where agents (predators
 The goal of the simulation is to explore population dynamics, agent behaviors, and the emergent patterns arising from simple rules. \\
 Instead of using the classic [Lotka-Volterra](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations) differential equations, \\
 this model simulates the behaviour of each agent using _object-oriented programming_ and observes the population dynamics over time. \\
-Watch [simulation videos](video_and_graphs/)
+Watch [simulation videos](videos_and_graphs)
 
 ## Changeable Parameters
 The user-specified parameters can be found in the `config.yaml`. 
