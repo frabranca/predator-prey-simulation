@@ -1,7 +1,6 @@
 from agents import Predator, Prey
 import numpy as np
 import random
-from probabilities import *
 
 class Environment:
     def __init__(self, config):
@@ -13,32 +12,34 @@ class Environment:
         # Preys:
         # Parameters
         self.preys_count = self.config['preys']['count']
-        self.preys_breed_age = self.config['preys']['breed_age']
+        self.preys_breed_age_min = self.config['preys']['breed_age_min']
+        self.preys_breed_age_max = self.config['preys']['breed_age_max']
         self.preys_max_age = self.config['preys']['max_age']
 
         # Probabilities:
         mean = self.config['preys']['breed_prob_mean']
         std = self.config['preys']['breed_prob_std']
-        self.preys_breed_prob = generate_distribution(self.config['preys']['breed_prob_mean'], 
-                                                      self.config['preys']['breed_prob_std'],
-                                                      self.preys_count)
+        self.preys_breed_prob = self.generate_distribution(self.config['preys']['breed_prob_mean'], 
+                                                        self.config['preys']['breed_prob_std'],
+                                                        self.preys_count)
 
         # Predators:
         # Parameters
         self.preds_count = self.config['predators']['count']
-        self.preds_breed_age = self.config['predators']['breed_age']
+        self.preds_breed_age_min = self.config['predators']['breed_age_min']
+        self.preds_breed_age_max = self.config['predators']['breed_age_max']
         self.preds_hunting_range = self.config['predators']['hunting_range']
         self.preds_max_starve_time = self.config['predators']['max_starve_time']
         self.preds_max_age = self.config['predators']['max_age']
 
         # Probabilities:
-        self.preds_breed_prob = generate_distribution(self.config['predators']['breed_prob_mean'], 
-                                                      self.config['predators']['breed_prob_std'], 
-                                                      self.preds_count)
+        self.preds_breed_prob = self.generate_distribution(self.config['predators']['breed_prob_mean'], 
+                                                        self.config['predators']['breed_prob_std'], 
+                                                        self.preds_count)
 
-        self.preds_hunt_prob = generate_distribution(self.config['predators']['hunt_prob_mean'], 
-                                                     self.config['predators']['hunt_prob_std'], 
-                                                     self.preds_count)
+        self.preds_hunt_prob = self.generate_distribution(self.config['predators']['hunt_prob_mean'], 
+                                                        self.config['predators']['hunt_prob_std'], 
+                                                        self.preds_count)
         
         # Genearate space
         self.space = [[None for _ in range(self.width)] for _ in range(self.height)]
@@ -46,20 +47,27 @@ class Environment:
         # Randomly populate the environment with preys and predators
         self.populate()
     
+    def generate_distribution(self, mean, std, sample_size):
+        samples = np.random.normal(mean, std, sample_size)
+        # Clamp the values to be between 0 and 1
+        clamped_samples = np.clip(samples, 0, 1)
+        return clamped_samples
+    
     def populate(self):
         # Place preys randomly
         if self.preys_count > 0:
             for i in range(self.preys_count):
                 x, y = self.random_empty_cell()
-                self.space[x][y] = Prey(x, y, self.space, self.preys_max_age, self.preys_breed_prob[i], self.preys_breed_age)
+                self.space[x][y] = Prey(x, y, self.space, self.preys_max_age, self.preys_breed_prob[i], 
+                                        self.preys_breed_age_min, self.preys_breed_age_max)
         
         # Place predators randomly
         if self.preds_count > 0:
             for i in range(self.preds_count):
                 x, y = self.random_empty_cell()
-                self.space[x][y] = Predator(x, y, self.space, self.preds_max_age, self.preds_breed_prob[i], self.preds_breed_age, 
-                                            self.preds_max_starve_time, self.preds_hunt_prob[i], 
-                                            self.preds_hunting_range)
+                self.space[x][y] = Predator(x, y, self.space, self.preds_max_age, self.preds_breed_prob[i], 
+                                            self.preds_breed_age_min, self.preds_breed_age_max, 
+                                            self.preds_max_starve_time, self.preds_hunt_prob[i], self.preds_hunting_range)
             
     def random_empty_cell(self):
         # Get a random empty cell in the space
@@ -82,7 +90,7 @@ class Environment:
                 if isinstance(cell, Prey):
                     if cell.is_alive:
                         self.space[cell.x][cell.y] = None
-                        cell.move()    # Prey moves
+                        cell.move()     # Prey moves
                         self.space[cell.x][cell.y] = cell
                         cell.breed()  # Prey breeds if possible
                     else:
@@ -96,9 +104,6 @@ class Environment:
                         cell.breed()  # Predator breeds if possible
                     else:
                         self.space[cell.x][cell.y] = None
-            
-        # print('Preys alive:', preys_alive)
-        # print('Predators alive:', predators_alive)
 
     def get_space(self):
         # Convert the environment into a numerical grid for plotting

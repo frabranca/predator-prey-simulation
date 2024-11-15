@@ -1,14 +1,15 @@
 import random
 
 class Prey:
-    def __init__(self, x, y, space, max_age, breed_prob, breed_age):
+    def __init__(self, x, y, space, max_age, breed_prob, breed_age_min, breed_age_max):
         # general attributes
         self.x = x
         self.y = y
         self.space = space
         self.max_age = max_age
         self.breed_prob = breed_prob
-        self.breed_age = breed_age
+        self.breed_age_min = breed_age_min
+        self.breed_age_max = breed_age_max
 
         # initial status
         self.is_alive = True
@@ -41,22 +42,23 @@ class Prey:
             self.x, self.y = random.choice(neighbors)
     
     def breed(self):
-        if self.age >= self.breed_age:
+        if self.breed_age_min <= self.age <= self.breed_age_max:
             if random.random() < self.breed_prob:
                 neighbors = self.check_neighbors()
                 if neighbors:
                     x_free, y_free = random.choice(neighbors)
-                    self.space[x_free][y_free] = Prey(x_free, y_free, self.space, self.max_age, self.breed_prob, self.breed_age)
+                    self.space[x_free][y_free] = Prey(x_free, y_free, self.space, self.max_age, self.breed_prob, self.breed_age_min, self.breed_age_max)
     
 class Predator:
-    def __init__(self, x, y, space, max_age, breed_prob, breed_age, max_starve_time, hunt_prob, hunting_range):
+    def __init__(self, x, y, space, max_age, breed_prob, breed_age_min, breed_age_max, max_starve_time, hunt_prob, hunting_range):
         # general attributes
         self.x = x
         self.y = y
         self.space = space
         self.max_age = max_age
         self.breed_prob = breed_prob
-        self.breed_age = breed_age
+        self.breed_age_min = breed_age_min
+        self.breed_age_max = breed_age_max
 
         # predators only attributes
         self.max_starve_time = max_starve_time
@@ -125,12 +127,12 @@ class Predator:
             self.hunger += 1
 
     def breed(self):
-        if self.age >= self.breed_age:
+        if self.breed_age_min <= self.age <= self.breed_age_max:
             if random.random() < self.breed_prob:
                 # New borns do not hunt straight out of the womb so they just go to empty cells
                 empty_cells, nearby_preys = self.check_neighbors()
                 if empty_cells:
                     x_free, y_free = random.choice(empty_cells)
-                    self.space[x_free][y_free] = Predator(x_free, y_free, self.space, self.max_starve_time, 
-                                                          self.hunt_prob, self.hunting_range, self.max_age,
-                                                          self.breed_prob, self.breed_age)
+                    self.space[x_free][y_free] = Predator(x_free, y_free, self.space, self.max_age, self.breed_prob, 
+                                                          self.breed_age_min, self.breed_age_max, self.max_starve_time, 
+                                                          self.hunt_prob, self.hunting_range)

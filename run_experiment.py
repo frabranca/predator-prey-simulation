@@ -16,9 +16,8 @@ steps = config['simulation']['steps']
 # Create the environment
 env = Environment(config)
 history = []
+
 for i in range(steps):
-    # print()
-    # print('Step:', i, '---------------------')
     history.append(env.get_space())
     env.step()
     env.age_up()
@@ -33,7 +32,7 @@ im = ax.imshow(history[0], cmap='viridis', interpolation='none', vmin=0, vmax=2,
 # Set up gridlines
 ax.set_xticks(np.arange(-0.5, history[0].shape[1], 1), minor=True)  # Tick at every cell edge
 ax.set_yticks(np.arange(-0.5, history[0].shape[0], 1), minor=True)  # Tick at every cell edge
-ax.grid(which='minor', color='w', linestyle='-', linewidth=1)
+ax.grid(which='minor', color='w', linestyle='-', linewidth=0.8)
 ax.tick_params(which='minor', bottom=False, left=False)
 
 # Title
@@ -53,7 +52,7 @@ def update(frame_index):
     # update frame
     im.set_array(history[frame_index])  # Update the image
     title.set_text(f"Step {frame_index}")  # Update the title with frame number
-    print('N. preys=', preys_alive, 'N. predators=', predators_alive)
+    # print('N. preys=', preys_alive, 'N. predators=', predators_alive)
     return [im]
 
 # Create the animation
@@ -65,6 +64,8 @@ ani.save(output_filename, writer="ffmpeg", fps=10)
 plt.figure()
 plt.plot(total_preys_count, label='Preys', color='black')
 plt.plot(total_predators_count, label='Predators', color='red')
+plt.xlabel('Steps')
+plt.ylabel('Number of agents')
 plt.legend()
 plt.grid()
 plt.savefig(output_filename[:-4] + '.png')

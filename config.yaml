@@ -1,22 +1,24 @@
 simulation:
-  steps: 100
+  steps: 500
   width: 50
   height: 50
 
 preys:
   count: 100
-  breed_age: 4
-  max_age: 6
-  breed_prob_mean: 0.7
-  breed_prob_std: 0.4
+  breed_age_min: 2
+  breed_age_max: 4
+  max_age: 10
+  breed_prob_mean: 0.1
+  breed_prob_std: 0.1
 
 predators:
-  count: 100
-  breed_age: 4
-  max_age: 10
-  breed_prob_mean: 0.7
-  breed_prob_std: 0.2
-  hunt_prob_mean: 0.8
+  count: 50
+  breed_age_min: 2
+  breed_age_max: 5
+  max_age: 8
+  breed_prob_mean: 0.4
+  breed_prob_std: 0.1
+  hunt_prob_mean: 1.0
   hunt_prob_std: 0.1
   hunting_range: 1
-  max_starve_time: 5
+  max_starve_time: 3

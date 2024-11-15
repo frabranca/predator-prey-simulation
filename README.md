@@ -2,8 +2,8 @@
 This repository contains a simulation of an _ecosystem_, where agents (predators and prey) interact within a grid-based environment.
 The goal of the simulation is to explore population dynamics, agent behaviors, and the emergent patterns arising from simple rules. 
 Instead of using the classic [Lotka-Volterra](https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations) differential equations,
-this model simulates the behaviour of each agent using _object-oriented programming_ and observes the population dynamics over time.
-Click [here](videos_and_graphs) for simulation videos.
+this model simulates the behaviour of each agent using _object-oriented programming_ and observes the _population dynamics_ over time 
+([see video](https://www.youtube.com/watch?v=B-pvkRdevKk)).
 
 ## Changeable Parameters
 The user-specified parameters can be found in the `config.yaml`. 
