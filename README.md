@@ -5,7 +5,6 @@ Instead of using the classic [Lotka-Volterra](https://en.wikipedia.org/wiki/Lotk
 this model simulates the behaviour of each agent using _object-oriented programming_ and observes the population dynamics over time.
 
 [video](videos_and_graphs/experiment_11-15-18-18-29.mp4)
-[video](https://www.youtube.com/watch?v=PBpcNaWmxa8&list=PLbjJivsvY07YqTlbLCGQ1AVJLIimuAP2o)
 
 ## Changeable Parameters
 The user-specified parameters can be found in the `config.yaml`. 
